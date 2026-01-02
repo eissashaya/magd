@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مجيد البرعي للسفريات والمشاوير الخاصة</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --gold-primary: #D4AF37;
+            --gold-secondary: #F4C430;
+            --gold-light: #FFE87C;
+            --dark-primary: #121212;
+            --dark-secondary: #1A1A1A;
+            --dark-tertiary: #2A2A2A;
+            --text-primary: #F5F5F5;
+            --text-secondary: #CCCCCC;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-dark: rgba(0, 0, 0, 0.3);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        body {
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--dark-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+            padding-top: 90px; /* لمنع تداخل المحتوى مع الهيدر الثابت */
+        }
+        
+        /* خلفية فنية محسنة */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.1) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(244, 196, 48, 0.08) 0%, transparent 30%),
+                radial-gradient(circle at 40% 80%, rgba(255, 232, 124, 0.05) 0%, transparent 30%),
+                linear-gradient(var(--dark-primary), var(--dark-secondary));
+            z-index: -2;
+        }
+        
+        .background-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(circle at 1px 1px, rgba(212, 175, 55, 0.1) 1px, transparent 0);
+            background-size: 40px 40px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        /* =================== الهيدر الجديد =================== */
+        .header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            background: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            z-index: 1000;
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .header.scrolled {
+            padding: 10px 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            background: rgba(18, 18, 18, 0.98);
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        /* الشعار */
+        .logo {
+            display: flex;
+            align-items: center;
+            text-decoration: none;
+            z-index: 1001; /* أعلى من القائمة المنزلقة */
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(45deg, var(--gold-primary), var(--gold-secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 15px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+        }
+        
+        .logo-icon i {
+            font-size: 1.5rem;
+            color: var(--dark-primary);
+        }
+        
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .logo-text .main {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--gold-primary);
+            line-height: 1.2;
+        }
+        
+        .logo-text .sub {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            letter-spacing: 1px;
+        }
+        
+        /* قائمة التنقل */
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            margin: 0 10px;
+            position: relative;
+        }
+        
+        .nav-menu a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            padding: 8px 15px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        
+        .nav-menu a i {
+            margin-left: 8px;
+            font-size: 1.1rem;
+        }
+        
+        .nav-menu a:hover {
+            color: var(--gold-primary);
+            background: rgba(212, 175, 55, 0.1);
+        }
+        
+        .nav-menu a.active {
+            color: var(--dark-primary);
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-secondary));
+        }
+        
+        /* زر الواتساب في الهيدر */
+        .header-whatsapp {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(to right, #25D366, #128C7E);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 700;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .header-whatsapp i {
+            margin-left: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .header-whatsapp:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 211, 102, 0.4);
+        }
+        
+        /* زر القائمة المنسدلة للجوال */
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            color: var(--gold-primary);
+            font-size: 1.8rem;
+            padding: 5px;
+            z-index: 1001; /* أعلى من القائمة المنزلقة */
+        }
+        
+        /* المحتوى الرئيسي (نفس المحتوى السابق مع تعديلات طفيفة) */
+        main {
+            margin-top: 30px;
+        }
+        
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            position: relative;
+            animation: fadeIn 1.2s ease-out;
+        }
+        
+        .logo-container {
+            max-width: 900px;
+            width: 90%;
+            border: 2px solid var(--gold-primary);
+            padding: 40px 30px;
+            position: relative;
+            backdrop-filter: blur(15px);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0, 0, 0, 0.3));
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5);
+            margin-bottom: 40px;
+            overflow: hidden;
+        }
+        
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--gold-primary), var(--gold-secondary), var(--gold-primary));
+            z-index: -1;
+            animation: borderAnimation 4s linear infinite;
+        }
+        
+        .logo-container::after {
+            content: '';
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: var(--dark-secondary);
+            z-index: -1;
+        }
+        
+        h1 {
+            font-size: clamp(2.5rem, 7vw, 4.5rem);
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: 1px;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-light));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
+            line-height: 1.2;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+            margin-top: 5px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+        
+        .badge {
+            font-size: 0.9rem;
+            border: 1px solid var(--gold-primary);
+            padding: 8px 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--gold-light);
+            border-radius: 30px;
+            font-weight: 600;
+        }
+        
+        .hero-desc {
+            max-width: 700px;
+            margin: 30px auto;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            padding: 0 15px;
+        }
+        
+        /* بطاقات الخدمات المحسنة */
+        .container {
+            max-width: 1200px;
+            margin: -80px auto 100px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .card {
+            background: linear-gradient(145deg, var(--dark-tertiary), var(--dark-secondary));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            padding: 40px 25px;
+            text-align: center;
+            border-radius: 15px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-secondary));
+        }
+        
+        .card:hover {
+            border-color: var(--gold-primary);
+            transform: translateY(-15px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card i {
+            font-size: 3rem;
+            color: var(--gold-primary);
+            margin-bottom: 20px;
+            display: block;
+        }
+        
+        .card h3 {
+            color: var(--gold-primary);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .card p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+        
+        /* زر الواتساب الرئيسي */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-secondary));
+            color: var(--dark-primary);
+            padding: 18px 40px;
+            text-decoration: none;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+            border: none;
+        }
+        
+        .cta-button i {
+            margin-left: 10px;
+            font-size: 1.4rem;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 25px rgba(212, 175, 55, 0.4);
+            color: var(--dark-primary);
+        }
+        
+        /* الفوتر */
+        .footer {
+            text-align: center;
+            padding: 60px 20px;
+            border-top: 1px solid rgba(212, 175, 55, 0.2);
+            color: var(--gold-primary);
+            font-size: 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.5), transparent);
+        }
+        
+        .footer p {
+            margin-bottom: 15px;
+        }
+        
+        .footer .slogan {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--gold-light);
+            margin-top: 20px;
+        }
+        
+        /* الرسوم المتحركة */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes borderAnimation {
+            0% {
+                filter: hue-rotate(0deg);
+            }
+            100% {
+                filter: hue-rotate(360deg);
+            }
+        }
+        
+        /* =================== التجاوب مع الجوال - التصحيحات =================== */
+        @media (max-width: 992px) {
+            /* إصلاح زر القائمة */
+            .hamburger {
+                display: block;
+                position: relative;
+                z-index: 1001;
+            }
+            
+            /* إصلاح القائمة المنزلقة */
+            .nav-menu {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 85%;
+                height: 100vh;
+                background: rgba(26, 26, 26, 0.98);
+                backdrop-filter: blur(20px);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 100px 30px 30px;
+                transition: right 0.4s ease-in-out;
+                border-left: 1px solid rgba(212, 175, 55, 0.2);
+                z-index: 999;
+                overflow-y: auto;
+            }
+            
+            .nav-menu.active {
+                right: 0;
+            }
+            
+            /* إضافة طبقة داكنة خلف القائمة */
+            .nav-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                right: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 998;
+            }
+            
+            .nav-overlay.active {
+                display: block;
+            }
+            
+            .nav-menu li {
+                margin: 10px 0;
+                width: 100%;
+            }
+            
+            .nav-menu a {
+                padding: 15px 20px;
+                justify-content: flex-start;
+                font-size: 1.1rem;
+                border-radius: 10px;
+                width: 100%;
+            }
+            
+            .header-whatsapp {
+                display: none;
+            }
+            
+            .header-whatsapp.mobile {
+                display: flex;
+                margin: 30px 0 0;
+                width: 100%;
+                justify-content: center;
+                font-size: 1rem;
+                padding: 15px;
+            }
+            
+            /* تعديلات للجوال */
+            body {
+                padding-top: 80px;
+            }
+            
+            .header {
+                padding: 12px 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 75px;
+            }
+            
+            .header {
+                padding: 10px 0;
+            }
+            
+            .logo-icon {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .logo-text .main {
+                font-size: 1.3rem;
+            }
+            
+            .logo-text .sub {
+                font-size: 0.7rem;
+            }
+            
+            .hero {
+                min-height: 90vh;
+            }
+            
+            .logo-container {
+                padding: 30px 20px;
+                width: 95%;
+            }
+            
+            h1 {
+                font-size: 2.8rem;
+            }
+            
+            .subtitle {
+                font-size: 1.3rem;
+                letter-spacing: 2px;
+            }
+            
+            .badge {
+                font-size: 0.8rem;
+                padding: 6px 15px;
+            }
+            
+            .hero-desc {
+                margin: 20px auto;
+                padding: 0 10px;
+            }
+            
+            .container {
+                margin: -40px auto 60px;
+                padding: 15px;
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .card {
+                padding: 30px 20px;
+            }
+            
+            .card h3 {
+                font-size: 1.6rem;
+            }
+            
+            .cta-button {
+                padding: 16px 35px;
+                font-size: 1.1rem;
+                width: 90%;
+                max-width: 350px;
+            }
+            
+            .footer {
+                padding: 40px 15px;
+            }
+            
+            /* تحسين القائمة المنزلقة للشاشات الصغيرة */
+            .nav-menu {
+                width: 90%;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .subtitle {
+                font-size: 1.1rem;
+                letter-spacing: 1px;
+            }
+            
+            .logo-container {
+                padding: 25px 15px;
+            }
+            
+            .card {
+                padding: 25px 15px;
+            }
+            
+            .card h3 {
+                font-size: 1.4rem;
+            }
+            
+            .card p {
+                font-size: 1rem;
+            }
+            
+            .cta-button {
+                font-size: 1rem;
+                padding: 14px 30px;
+            }
+        }
+        
+        /* تحسينات للشاشات الكبيرة */
+        @media (min-width: 1200px) {
+            .container {
+                gap: 40px;
+            }
+            
+            .card {
+                padding: 50px 30px;
+            }
+        }
+        
+        /* تأثيرات إضافية */
+        .gold-text {
+            color: var(--gold-primary);
+        }
+        
+        .section-divider {
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--gold-primary), var(--gold-secondary));
+            margin: 30px auto;
+            border-radius: 2px;
+        }
+        
+        /* شريط التمرير المخصص */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: var(--dark-secondary);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(to bottom, var(--gold-primary), var(--gold-secondary));
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(to bottom, var(--gold-secondary), var(--gold-light));
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="background-overlay"></div>
+    <div class="background-pattern"></div>
+
+    <!-- الهيدر الجديد -->
+    <header class="header">
+        <div class="header-container">
+            <!-- الشعار -->
+            <a href="#" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-car"></i>
+                </div>
+                <div class="logo-text">
+                    <span class="main">مجيد البرعي</span>
+                    <span class="sub">للسفريات والمشاوير</span>
+                </div>
+            </a>
+
+            <!-- زر القائمة المنسدلة للجوال -->
+            <button class="hamburger" id="hamburger">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- طبقة داكنة خلف القائمة -->
+            <div class="nav-overlay" id="navOverlay"></div>
+
+            <!-- قائمة التنقل -->
+            <nav class="nav">
+                <ul class="nav-menu" id="navMenu">
+                    <li><a href="#home" class="active"><i class="fas fa-home"></i> الرئيسية</a></li>
+                    <li><a href="#services"><i class="fas fa-road"></i> خدماتنا</a></li>
+                    <li><a href="#about"><i class="fas fa-info-circle"></i> عن الشركة</a></li>
+                    <li><a href="#contact"><i class="fas fa-phone-alt"></i> اتصل بنا</a></li>
+                    <li><a href="#trips"><i class="fas fa-calendar-alt"></i> رحلاتنا</a></li>
+                    <li><a href="#testimonials"><i class="fas fa-comments"></i> آراء العملاء</a></li>
+                    
+                    <!-- زر الواتساب للجوال -->
+                    <a href="https://wa.me/967715015346" class="header-whatsapp mobile" target="_blank">
+                        <i class="fab fa-whatsapp"></i> تواصل معنا
+                    </a>
+                </ul>
+            </nav>
+
+            <!-- زر الواتساب للشاشات الكبيرة -->
+            <a href="https://wa.me/967715015346" class="header-whatsapp" target="_blank">
+                <i class="fab fa-whatsapp"></i> تواصل معنا
+            </a>
+        </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main>
+        <section class="hero" id="home">
+            <div class="logo-container">
+                <div class="badge"><i class="fas fa-crown"></i> سفريات دولية مشاوير خاصة</div>
+                <h1>مجيد البرعي</h1>
+                <div class="subtitle">للسفريات والمشاوير الخاصة</div>
+                <div class="section-divider"></div>
+                <p class="hero-desc">
+                    نقدم لكم أرقى خدمات النقل البري بين اليمن والمملكة العربية السعودية، بخصوصية تامة وأمان يرافقكم في كل طريق. نسعى لتوفير تجربة سفر فاخرة مع مراعاة أعلى معايير الراحة والسلامة.
+                </p>
+                <a href="https://wa.me/967715015346" class="cta-button" target="_blank">
+                    <i class="fab fa-whatsapp"></i> احجز مشوارك الآن
+                </a>
+            </div>
+        </section>
+
+        <div class="container" id="services">
+            <div class="card">
+                <i class="fas fa-road"></i>
+                <h3>اليمن - السعودية</h3>
+                <p>رحلات مباشرة من الباب إلى الباب، نربط بين كافة المدن اليمنية وجميع مناطق المملكة العربية السعودية بأسطول حديث ومريح.</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-car"></i>
+                <h3>مشاوير خاصة</h3>
+                <p>خدمة الـ VIP للعائلات والشخصيات، نوفر لكم الخصوصية والراحة التي تستحقونها بسيارات حديثة ومكيفة ومجهزة بأعلى المواصفات.</p>
+            </div>
+
+            <div class="card">
+                <i class="fas fa-box"></i>
+                <h3>نقل الأمانات</h3>
+                <p>نضمن وصول طرودكم وأماناتكم ومستنداتكم الهامة بسرعة فائقة وعناية تامة بين البلدين مع نظام تتبع متطور.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer" id="contact">
+        <p>جميع الحقوق محفوظة © <span class="gold-text">مبرمج الصفحه لؤي البرعي</span></p>
+        <p class="slogan">التميز في الخدمة.. السرعة في الوصول</p>
+        <p><i class="fas fa-phone"></i> للتواصل: +967 715 015 346</p>
+    </footer>
+
+    <script>
+        // كود JavaScript المحدث للتحكم في الهيدر والقائمة المنزلقة
+        document.addEventListener('DOMContentLoaded', function() {
+            // عناصر DOM
+            const header = document.querySelector('.header');
+            const hamburger = document.getElementById('hamburger');
+            const navMenu = document.getElementById('navMenu');
+            const navOverlay = document.getElementById('navOverlay');
+            const navLinks = document.querySelectorAll('.nav-menu a');
+            
+            // حالة القائمة المنزلقة
+            let isMenuOpen = false;
+            
+            // تغيير الهيدر عند التمرير
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+            });
+            
+            // فتح/إغلاق قائمة الجوال
+            function toggleMenu() {
+                isMenuOpen = !isMenuOpen;
+                
+                if (isMenuOpen) {
+                    navMenu.classList.add('active');
+                    navOverlay.classList.add('active');
+                    hamburger.innerHTML = '<i class="fas fa-times"></i>';
+                    document.body.style.overflow = 'hidden'; // منع التمرير عند فتح القائمة
+                } else {
+                    navMenu.classList.remove('active');
+                    navOverlay.classList.remove('active');
+                    hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+                    document.body.style.overflow = 'auto'; // إعادة التمرير
+                }
+            }
+            
+            // فتح/إغلاق القائمة عند النقر على الهامبرجر
+            hamburger.addEventListener('click', toggleMenu);
+            
+            // إغلاق القائمة عند النقر على الخلفية الداكنة
+            navOverlay.addEventListener('click', toggleMenu);
+            
+            // إغلاق القائمة عند الضغط على رابط
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    // إذا كان الرابط يشير إلى قسم في الصفحة نفسها
+                    if (this.getAttribute('href').startsWith('#')) {
+                        e.preventDefault();
+                        const targetId = this.getAttribute('href');
+                        const targetElement = document.querySelector(targetId);
+                        
+                        if (targetElement) {
+                            // إغلاق القائمة أولاً
+                            if (isMenuOpen) {
+                                toggleMenu();
+                            }
+                            
+                            // التمرير إلى القسم المطلوب بسلاسة
+                            setTimeout(() => {
+                                targetElement.scrollIntoView({
+                                    behavior: 'smooth',
+                                    block: 'start'
+                                });
+                            }, 300);
+                        }
+                    }
+                    // إذا كان الرابط خارجي (مثل واتساب) يفتح مباشرة
+                });
+            });
+            
+            // إغلاق القائمة عند الضغط على زر الهروب (Escape)
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && isMenuOpen) {
+                    toggleMenu();
+                }
+            });
+            
+            // تأثيرات تفاعلية للبطاقات
+            const cards = document.querySelectorAll('.card');
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            cards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                observer.observe(card);
+            });
+            
+            // تمييز القسم النشط في قائمة التنقل
+            window.addEventListener('scroll', function() {
+                let current = '';
+                const sections = document.querySelectorAll('section, .container, .footer');
+                
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    const href = link.getAttribute('href');
+                    if (href === `#${current}` || (current === 'home' && href === '#') || (current === '' && href === '#')) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+            
+            // التأكد من إغلاق القائمة عند تغيير حجم النافذة (إذا فتحت على شاشة كبيرة)
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 992 && isMenuOpen) {
+                    toggleMenu();
+                }
+            });
+        });
+    </script>
+
+</body>
+
+</html>
